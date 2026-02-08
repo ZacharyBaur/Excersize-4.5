@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cat Facts API Demo</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Navigation Bar -->
+  <!-- Provides links between pages -->
+  <nav class="bg-blue-600 text-white p-4">
+    <a href="index.html" class="mr-4 font-semibold">Home</a>
+    <a href="ai-writeup.html" class="font-semibold">AI Write-Up</a>
+  </nav>
+
+  <!-- Main Content Wrapper -->
+  <main class="max-w-3xl mx-auto mt-10 space-y-10">
+
+    <!-- Random Fact Section -->
+    <!-- Displays a single random cat fact -->
+    <section class="p-6 bg-white shadow rounded">
+      <h2 class="text-2xl font-bold mb-4">Random Cat Fact</h2>
+      <p id="randomFact" class="text-lg italic"></p>
+
+      <button id="newFactBtn" 
+              class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition">
+        Get New Fact
+      </button>
+    </section>
+
+    <!-- Fact List Section -->
+    <!-- Displays multiple cat facts from another API endpoint -->
+    <section class="p-6 bg-white shadow rounded">
+      <h2 class="text-2xl font-bold mb-4">More Cat Facts</h2>
+      <ul id="factList" class="list-disc pl-6 space-y-2"></ul>
+    </section>
+
+  </main>
+
+  <!-- JavaScript Module Import -->
+  <!-- Handles API calls and DOM updates -->
+  <script type="module">
+    import { getRandomFact, getFactList } from "./js/api.js";
+
+    // Load a random fact into the page
+    async function loadRandomFact() {
+      const data = await getRandomFact();
+      document.getElementById("randomFact").textContent = data.fact;
+    }
+
+    // Load a list of facts into the page
+    async function loadFactList() {
+      const data = await getFactList(5);
+      const list = document.getElementById("factList");
+
+      list.innerHTML = ""; // Clear old items
+
+      data.data.forEach(item => {
+        const li = document.createElement("li");
+        li.textContent = item.fact;
+        list.appendChild(li);
+      });
+    }
+
+    // Button event listener for new random fact
+    document.getElementById("newFactBtn").addEventListener("click", loadRandomFact);
+
+    // Initial page load
+    loadRandomFact();
+    loadFactList();
+  </script>
+
+</body>
+</html>
